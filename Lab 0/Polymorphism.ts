@@ -6,14 +6,15 @@ abstract class Animal {
     constructor(name : string) {
         this.Name = name;
     }
-    public abstract Description() : string;
+    public abstract Description();
 }
 
 class Dog extends Animal{
     public Description() : string
     {
         return this.Name + " the Dog";
-    }
+    }   
+    public Name : string;
 }
 
 class Cat extends Animal{
