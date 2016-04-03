@@ -15,10 +15,10 @@ namespace PortableConsole
 			Map = Group(cells);
 		}
 
-		public string Output()
+		public List<byte> Output()
 		{
 			if (Map.Count == 0)
-				return string.Empty;
+				return new List<byte>();
 			int left = int.MaxValue;
 			int right = int.MinValue;
 			int top = int.MaxValue;
@@ -44,7 +44,7 @@ namespace PortableConsole
 
 			var dictionaries = Map.ToDictionary(x => x[0].Position.X, l => l.ToDictionary(x => x.Position.Y));
 			
-			string res = string.Empty;
+			List<byte> res = new List<byte>();
 
 			for (int y = top; y < bottom + 1; y++)
 			{
@@ -52,12 +52,12 @@ namespace PortableConsole
 				{
 					if (!dictionaries.ContainsKey(x) || !dictionaries[x].ContainsKey(y))
 					{
-						res += '0';
+						res.Add(0x30);
 						continue;
 					}
-					res += dictionaries[x][y].IsAlive ? '1' : '0';
+					res.Add(dictionaries[x][y].IsAlive ? (byte)0x31 : (byte)0x30);
 				}
-				res += Environment.NewLine;
+                res.AddRange(Environment.NewLine.Select(ch => (byte)ch));
 			}
 
 

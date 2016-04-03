@@ -55,7 +55,7 @@ namespace PortableConsole
 
 		}
 
-		public static void HandleArgs(string[] args, bool[,] input, Stream output, out int steps)
+		public static bool HandleArgs(string[] args, ref bool[,] input, ref Stream output, ref int steps)
 		{
 			steps = 0;
 			for (int i = 0; i < args.Length; i++)
@@ -65,7 +65,7 @@ namespace PortableConsole
 					if (args[i + 1].StartsWith("-"))
 					{
 						Console.WriteLine("Input file argument not found");
-						return;
+						return false;
 					}
 					else
 						input = Read(args[i + 1]);
@@ -77,7 +77,7 @@ namespace PortableConsole
 						if (args[i + 1].StartsWith("-"))
 						{
 							Console.WriteLine("Output file argument not found");
-							return;
+							return false;
 						}
 						else
 							output = Open(args[i + 1]);
@@ -88,12 +88,13 @@ namespace PortableConsole
 					if (args[i + 1].StartsWith("-"))
 					{
 						Console.WriteLine("Number of iterations argument not found");
-						return;
+						return false;
 					}
 					else
 						Int32.TryParse(args[i + 1], out steps);
 				}
 			}
+            return true;
 		}
 
 		public static void Main(string[] args)
@@ -101,7 +102,8 @@ namespace PortableConsole
 			bool[,] input = null;
 			Stream output = Console.OpenStandardOutput();
 			int steps = 0;
-			HandleArgs(args, input, output, out steps);
+			if(!HandleArgs(args, ref input, ref output, ref steps))
+                return;
 
 			if (input == null)
 			{
@@ -129,11 +131,9 @@ namespace PortableConsole
 
 			var result = conway.Output();
 
-
-			output.Write(result.Select(ch => (byte)ch).ToArray(), 0, result.Length);
+			output.Write(result.ToArray(), 0, result.Count);
 			output.Flush();
 
-			Console.WriteLine($"Done!");
 		}
 	}
 }
