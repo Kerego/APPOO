@@ -3,15 +3,15 @@
 
 ####Usage
 #####Clone Repository
-```
+```bash
 git clone https://github.com/Kerego/APPOO.git
 ```
 #####Open Lab 1 directory
-```
-cd "Lab 1"
+```bash
+cd APPOO/"Lab 1"
 ```
 #####Run the application  
-```
+```bash
 Standalone/"Lab 1" -i input.txt -n 1000 -o output.txt
 ``` 
 <table>
