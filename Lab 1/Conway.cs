@@ -13,6 +13,7 @@ namespace PortableConsole
 		public void Initialize(List<Cell> cells)
 		{
 			Map = Group(cells);
+			cells.ForEach(cell => AddDeadNeighbours(cell.Position));
 		}
 
 		public List<byte> Output()
@@ -62,6 +63,22 @@ namespace PortableConsole
 
 
 			return res;
+		}
+
+		public void AddDeadNeighbours(Vector2 position)
+		{
+			var list = Map.SelectMany(x => x).ToList();
+			var neighbours = new List<Vector2>
+  			{
+			  new Vector2(position.X - 1, position.Y - 1), new Vector2(position.X, position.Y - 1),   new Vector2(position.X + 1, position.Y - 1),
+			  new Vector2(position.X - 1, position.Y),                                                new Vector2(position.X + 1, position.Y),
+			  new Vector2(position.X - 1, position.Y + 1), new Vector2(position.X, position.Y + 1),   new Vector2(position.X + 1, position.Y + 1),
+			};
+
+			var existing = list.Where(cell => neighbours.Contains(cell.Position)).ToList();
+			list.AddRange(neighbours.Except(existing.Select(x => x.Position)).Select(pos => new Cell(pos, false)));
+
+			Map = Group(list);
 		}
 
 		public void Step()
