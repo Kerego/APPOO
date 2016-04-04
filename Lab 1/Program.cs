@@ -62,7 +62,7 @@ namespace PortableConsole
 			{
 				if (args[i] == "-i" || args[i] == "--input")
 				{
-					if (args[i + 1].StartsWith("-"))
+					if (i + 1 == args.Length || args[i + 1].StartsWith("-"))
 					{
 						Console.WriteLine("Input file argument not found");
 						return false;
@@ -70,22 +70,19 @@ namespace PortableConsole
 					else
 						input = Read(args[i + 1]);
 				}
-				if (args[i] == "-o" || args[i] == "--ouput")
+				if (args[i] == "-o" || args[i] == "--output")
 				{
-					if (i + 1 < args.Length)
+					if (i + 1 == args.Length || args[i + 1].StartsWith("-"))
 					{
-						if (args[i + 1].StartsWith("-"))
-						{
-							Console.WriteLine("Output file argument not found");
-							return false;
-						}
-						else
-							output = Open(args[i + 1]);
+						Console.WriteLine("Output file argument not found");
+						return false;
 					}
+					else
+						output = Open(args[i + 1]);
 				}
 				if (args[i] == "-n" || args[i] == "--number-of-iterations")
 				{
-					if (args[i + 1].StartsWith("-"))
+					if (i + 1 == args.Length || args[i + 1].StartsWith("-"))
 					{
 						Console.WriteLine("Number of iterations argument not found");
 						return false;
@@ -94,7 +91,8 @@ namespace PortableConsole
 						Int32.TryParse(args[i + 1], out steps);
 				}
 			}
-            return true;
+
+			return true;
 		}
 
 		public static void Main(string[] args)
@@ -102,8 +100,9 @@ namespace PortableConsole
 			bool[,] input = null;
 			Stream output = Console.OpenStandardOutput();
 			int steps = 0;
+
 			if(!HandleArgs(args, ref input, ref output, ref steps))
-                return;
+				return;
 
 			if (input == null)
 			{
