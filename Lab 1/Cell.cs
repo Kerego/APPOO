@@ -29,7 +29,7 @@ namespace PortableConsole
 		public bool Equals(Cell a, Cell b) => a.Position.Equals(b.Position);
 	}
 
-	class CellComparer : IComparer<Cell>
+	public class CellComparer : IComparer<Cell>
 	{
 		public int Compare(Cell a, Cell b)
 		{

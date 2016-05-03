@@ -7,8 +7,8 @@ namespace PortableConsole
 	public class Conway
 	{
 		public List<List<Cell>> Map = new List<List<Cell>>();
-		CellComparer _comparer = new CellComparer();
-		CellSortComparer _sortComparer = new CellSortComparer();
+		CellEqualityComparer _comparer = new CellEqualityComparer();
+		CellComparer _sortComparer = new CellComparer();
 
 		public void Initialize(List<Cell> cells)
 		{
