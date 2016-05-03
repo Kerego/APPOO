@@ -13,7 +13,6 @@ namespace PortableConsole
 		public void Initialize(List<Cell> cells)
 		{
 			Map = Group(cells);
-			cells.ForEach(cell => AddDeadNeighbours(cell.Position));
 		}
 
 		public List<byte> Output()
@@ -44,7 +43,7 @@ namespace PortableConsole
 			int[] counters = new int[Map.Count];
 
 			var dictionaries = Map.ToDictionary(x => x[0].Position.X, l => l.ToDictionary(x => x.Position.Y));
-			
+
 			List<byte> res = new List<byte>();
 
 			for (int y = top; y < bottom + 1; y++)
@@ -58,27 +57,10 @@ namespace PortableConsole
 					}
 					res.Add(dictionaries[x][y].IsAlive ? (byte)0x31 : (byte)0x30);
 				}
-                res.AddRange(Environment.NewLine.Select(ch => (byte)ch));
+				res.AddRange(Environment.NewLine.Select(ch => (byte)ch));
 			}
 
-
 			return res;
-		}
-
-		public void AddDeadNeighbours(Vector2 position)
-		{
-			var list = Map.SelectMany(x => x).ToList();
-			var neighbours = new List<Vector2>
-  			{
-			  new Vector2(position.X - 1, position.Y - 1), new Vector2(position.X, position.Y - 1),   new Vector2(position.X + 1, position.Y - 1),
-			  new Vector2(position.X - 1, position.Y),                                                new Vector2(position.X + 1, position.Y),
-			  new Vector2(position.X - 1, position.Y + 1), new Vector2(position.X, position.Y + 1),   new Vector2(position.X + 1, position.Y + 1),
-			};
-
-			var existing = list.Where(cell => neighbours.Contains(cell.Position)).ToList();
-			list.AddRange(neighbours.Except(existing.Select(x => x.Position)).Select(pos => new Cell(pos, false)));
-
-			Map = Group(list);
 		}
 
 		public void Step()
@@ -207,6 +189,8 @@ namespace PortableConsole
 
 			for (int i = 0; i < next.Count; i++)
 			{
+				if (!insideNeighbours[i].Any())
+					continue;
 				next[i].AddRange(insideNeighbours[i].Distinct(_comparer));
 				next[i].Sort(_sortComparer);
 			}
@@ -215,17 +199,10 @@ namespace PortableConsole
 
 			next.RemoveAll(group => group.Count == 0);
 
-
-
-
 			var outside = Group(outsideNeighbours.Distinct(_comparer).ToList());
 			AddNeighbours(outside, next);
 
-
-
 			next.ForEach(group => group.ForEach(cell => { cell.IsRemoveCandidate = true; cell.NotChangeState = false; }));
-
-
 
 			Map = next;
 
@@ -284,7 +261,7 @@ namespace PortableConsole
 				}
 			}
 		}
-		
+
 
 		private void AddNeighbours(List<List<Cell>> sortedNeighbours, List<List<Cell>> map)
 		{
@@ -324,7 +301,7 @@ namespace PortableConsole
 		{
 			map.Insert(groupIndex, neighboursGroup);
 		}
-		
+
 	}
 
 }

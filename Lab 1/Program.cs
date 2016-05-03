@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -16,16 +17,16 @@ namespace PortableConsole
 				var matrix = lines.Select(line => line.ToCharArray()).ToArray();
 				var count = lines.Count;
 				var length = lines.Max(line => line.Length);
-				bool[,] cells = new bool[length, count];
+				bool[,] cells = new bool[length + 2, count + 2];
 				for (int x = 0; x < length; x++)
 					for (int y = 0; y < count; y++)
 						switch (matrix[y][x])
 						{
 							case '1':
-								cells[x, y] = true;
+								cells[x + 1, y + 1] = true;
 								break;
 							case '0':
-								cells[x, y] = false;
+								cells[x + 1, y + 1] = false;
 								break;
 							default:
 								throw new Exception("Input contains wrong symbols");
@@ -101,7 +102,7 @@ namespace PortableConsole
 			Stream output = Console.OpenStandardOutput();
 			int steps = 0;
 
-			if(!HandleArgs(args, ref input, ref output, ref steps))
+			if (!HandleArgs(args, ref input, ref output, ref steps))
 				return;
 
 			if (input == null)
@@ -109,7 +110,6 @@ namespace PortableConsole
 				Console.WriteLine("Missing Input");
 				return;
 			}
-
 
 			Conway conway = new Conway();
 
@@ -122,12 +122,11 @@ namespace PortableConsole
 					cells.Add(new Cell(i, j, input[i, j]));
 				}
 			}
-
 			conway.Initialize(cells);
-
+			
 			for (int i = 0; i < steps; i++)
 				conway.Step();
-
+			
 			var result = conway.Output();
 
 			output.Write(result.ToArray(), 0, result.Count);

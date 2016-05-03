@@ -7,14 +7,9 @@ namespace PortableConsole
 		public Vector2 Position;
 		public bool IsAlive;
 		public bool IsRemoveCandidate = true;
-		public bool IsBornCandidate { get; set; }
-		public bool NotChangeState { get; set; }
+		public bool IsBornCandidate;
+		public bool NotChangeState;
 
-		public Cell(Vector2 position, bool alive)
-		{
-			Position = position;
-			IsAlive = alive;
-		}
 		public Cell(int x, int y, bool alive)
 		{
 			Position = new Vector2(x, y);
@@ -28,13 +23,13 @@ namespace PortableConsole
 		}
 	}
 
-	public class CellComparer : IEqualityComparer<Cell>
+	public class CellEqualityComparer : IEqualityComparer<Cell>
 	{
 		public int GetHashCode(Cell obj) => 0;
 		public bool Equals(Cell a, Cell b) => a.Position.Equals(b.Position);
 	}
 
-	class CellSortComparer : IComparer<Cell>
+	class CellComparer : IComparer<Cell>
 	{
 		public int Compare(Cell a, Cell b)
 		{
